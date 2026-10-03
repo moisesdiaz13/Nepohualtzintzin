@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0A0A0A">
+<title>Nepohualtzintzin — Ábaco Mesoamericano</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{
+  --red:#B01E1E;--red-light:#D62828;--red-dark:#7A1414;
+  --turquoise:#2BB3E0;--turquoise-dark:#156B8C;
+  --ocre:#E5A82E;--ocre-dark:#8C6218;
+  --bone:#F0E9D8;--bone-dim:#A89F8B;--bone-faint:rgba(240,233,216,0.15);
+  --black:#0A0A0A;--black2:#151515;--black3:#1E1E1E;
+  --text:var(--bone);--text2:var(--bone-dim);--text3:#6b6558;
+  --border2:rgba(240,233,216,0.25);
+  --radius:12px;--radius-sm:8px;
+  --leather:#1a1510;
+  --bead:#F0E9D8;--bead-shadow:#8a7f68;
+  --bead-red:#B01E1E;--bead-red-shadow:#5a0f0f;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden;}
+.app{max-width:430px;margin:0 auto;padding:1rem 1rem 3rem;}
+.screen{display:none;}.screen.active{display:block;}
+.btn-p{width:100%;padding:14px;background:var(--red);color:var(--bone);border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:0.6rem;font-family:inherit;letter-spacing:.02em;}
+.btn-p:disabled{background:var(--black3);color:var(--text3);cursor:default;}
+.btn-s{width:100%;padding:12px;background:transparent;color:var(--bone-dim);border:1px solid var(--border2);border-radius:var(--radius);font-size:14px;cursor:pointer;margin-bottom:0.5rem;font-family:inherit;}
+.btn-s:hover{background:var(--black2);color:var(--bone);}
+.logo-wrap{text-align:center;padding:2rem 0 1rem;}
+.app-title{font-size:24px;font-weight:700;color:var(--bone);text-align:center;letter-spacing:.03em;}
+.app-sub{font-size:13px;color:var(--ocre);text-align:center;margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
+.quote-box{background:var(--black2);border-left:3px solid var(--ocre);padding:0.9rem 1.1rem;margin:1.25rem 0;}
+.quote-text{font-size:13px;color:var(--bone);line-height:1.75;font-style:italic;}
+.quote-author{font-size:11px;color:var(--ocre);margin-top:6px;}
+.top-row{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0 0.9rem;}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--turquoise);color:var(--black);padding:10px 18px;border-radius:var(--radius);font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:999;font-weight:600;}
+.toast.show{opacity:1;}
+.glyph-btn{display:flex;flex-direction:column;align-items:center;padding:1.25rem;background:var(--black2);border:2px solid var(--bone-faint);border-radius:var(--radius);cursor:pointer;width:100%;margin-bottom:0.75rem;font-family:inherit;color:var(--bone);}
+.glyph-btn:hover{border-color:var(--red);background:var(--black3);}
+.glyph-title{font-size:17px;font-weight:600;color:var(--bone);margin-top:0.6rem;}
+.glyph-desc{font-size:12px;color:var(--bone-dim);margin-top:3px;text-align:center;}
+.nepohual-wrap{background:var(--leather);border-radius:16px;padding:12px 8px;margin:0.9rem 0;position:relative;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;border:2px solid var(--red-dark);box-shadow:inset 0 0 30px rgba(0,0,0,0.8);}
+.nepohual-wrap::before,.nepohual-wrap::after{content:'';position:absolute;left:0;right:0;height:6px;border-top:2px dashed var(--bone);opacity:.35;}
+.nepohual-wrap::before{top:6px;}
+.nepohual-wrap::after{bottom:6px;}
+.nepohual{display:inline-flex;gap:8px;padding:14px 10px;}
+.varilla{display:flex;flex-direction:column;align-items:center;width:42px;flex-shrink:0;}
+.varilla-inner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;height:290px;}
+.bead-slot{height:36px;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;}
+.bead{width:32px;height:32px;border-radius:50%;cursor:pointer;transition:transform .25s cubic-bezier(.4,1.6,.6,1);position:relative;background:radial-gradient(circle at 32% 30%,#ffffff,var(--bead) 55%,var(--bead-shadow) 100%);box-shadow:0 2px 4px rgba(0,0,0,0.7),inset 0 -2px 3px rgba(0,0,0,0.25);}
+.bead.red{background:radial-gradient(circle at 32% 30%,#ff4a4a,var(--bead-red) 60%,var(--bead-red-shadow) 100%);}
+.bead::after{content:'';position:absolute;top:22%;left:22%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.85);filter:blur(1px);}
+.bead:active{transform:scale(0.92);}
+.bar-center{height:8px;width:100%;background:linear-gradient(to bottom,#4a2a1a,#2a1508,#4a2a1a);border-radius:2px;position:relative;z-index:3;}
+.varilla-label{font-size:10px;color:var(--ocre);opacity:.85;margin-top:6px;text-align:center;font-weight:600;}
+.value-display{background:linear-gradient(135deg,var(--black2),var(--black));border-radius:14px;padding:1rem;text-align:center;margin:0.75rem 0;border:2px solid var(--red-dark);position:relative;}
+.value-display::before{content:'';position:absolute;inset:5px;border:1px dashed var(--bone);border-radius:10px;opacity:.2;pointer-events:none;}
+.value-label{font-size:11px;color:var(--ocre);letter-spacing:.15em;text-transform:uppercase;font-weight:600;}
+.value-number{font-size:42px;font-weight:700;color:var(--turquoise);margin-top:4px;font-variant-numeric:tabular-nums;text-shadow:0 0 20px rgba(43,179,224,0.4);}
+.value-target{font-size:14px;color:var(--bone-dim);margin-top:6px;}
+.value-target strong{color:var(--ocre);font-size:20px;}
+.nav-tabs{display:flex;gap:6px;margin-bottom:0.9rem;}
+.nav-tab{flex:1;padding:9px;background:var(--black2);border:1px solid var(--bone-faint);border-radius:var(--radius-sm);font-size:13px;color:var(--bone-dim);cursor:pointer;font-weight:500;font-family:inherit;}
+.nav-tab.active{background:var(--red);color:var(--bone);border-color:var(--red);}
+.guide-sec{background:var(--black2);border-radius:var(--radius);padding:1rem;margin-bottom:0.75rem;border-left:3px solid var(--ocre);}
+.guide-title{font-size:15px;font-weight:600;color:var(--bone);margin-bottom:6px;}
+.guide-body{font-size:13px;color:var(--bone-dim);line-height:1.7;}
+.guide-body strong{color:var(--bone);}
+.guide-body code{background:var(--black3);color:var(--turquoise);padding:2px 6px;border-radius:4px;font-size:12px;}
+.step-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--red);color:var(--bone);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-txt{font-size:13px;color:var(--bone);line-height:1.6;padding-top:3px;}
+.difficulty-row{display:flex;gap:6px;margin-bottom:0.75rem;}
+.diff-btn{flex:1;padding:8px;background:var(--black2);border:1px solid var(--bone-faint);border-radius:var(--radius-sm);font-size:12px;color:var(--bone-dim);cursor:pointer;font-family:inherit;font-weight:500;}
+.diff-btn.active{background:var(--turquoise);color:var(--black);border-color:var(--turquoise);font-weight:700;}
+.check-btns{display:flex;gap:6px;margin-top:0.5rem;}
+.check-btns .btn-p,.check-btns .btn-s{margin-bottom:0;flex:1;}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0.9rem;background:var(--black2);border-radius:var(--radius-sm);margin-bottom:0.4rem;border:1px solid var(--bone-faint);}
+.setting-label{font-size:13px;color:var(--bone);font-weight:500;}
+.setting-sub{font-size:11px;color:var(--bone-dim);margin-top:2px;}
+.seg{display:flex;gap:4px;background:var(--black3);border-radius:8px;padding:3px;}
+.seg button{background:transparent;border:none;padding:5px 10px;border-radius:6px;font-size:12px;color:var(--bone-dim);cursor:pointer;font-family:inherit;font-weight:500;}
+.seg button.on{background:var(--red);color:var(--bone);}
+.complete-area{text-align:center;padding:1.5rem 0.5rem 1rem;}
+.complete-icon{font-size:52px;margin-bottom:0.7rem;}
+.complete-title{font-size:20px;font-weight:600;color:var(--bone);margin-bottom:0.4rem;}
+.complete-sub{font-size:13px;color:var(--bone-dim);margin-bottom:1rem;line-height:1.6;}
+.complete-meta{font-size:12px;color:var(--turquoise);margin-bottom:1.1rem;font-weight:600;}
+.deco-divider{height:1px;background:linear-gradient(to right,transparent,var(--bone-faint),transparent);margin:1rem 0;}
+.deco-dots{display:flex;gap:6px;justify-content:center;margin:1rem 0;}
+.deco-dots span{width:8px;height:8px;border-radius:50%;}
+.deco-dots span:nth-child(1){background:var(--red);}
+.deco-dots span:nth-child(2){background:var(--turquoise);}
+.deco-dots span:nth-child(3){background:var(--ocre);}
+.deco-dots span:nth-child(4){background:var(--bone);}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="app">
+
+<div class="screen active" id="s-welcome">
+  <div class="logo-wrap">
+    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" style="display:block;margin:0 auto 0.75rem;">
+      <circle cx="50" cy="50" r="46" fill="#0A0A0A" stroke="#B01E1E" stroke-width="2"/>
+      <circle cx="50" cy="50" r="40" fill="none" stroke="#E5A82E" stroke-width="1" stroke-dasharray="3,4" opacity=".6"/>
+      <line x1="18" y1="50" x2="82" y2="50" stroke="#2BB3E0" stroke-width="2"/>
+      <circle cx="30" cy="40" r="5" fill="#F0E9D8"/>
+      <circle cx="50" cy="40" r="5" fill="#F0E9D8"/>
+      <circle cx="70" cy="40" r="5" fill="#F0E9D8"/>
+      <circle cx="30" cy="62" r="5" fill="#B01E1E"/>
+      <circle cx="50" cy="62" r="5" fill="#F0E9D8"/>
+      <circle cx="70" cy="62" r="5" fill="#B01E1E"/>
+    </svg>
+    <div class="app-title">Nepohualtzintzin</div>
+    <div class="app-sub">El ábaco mesoamericano</div>
+  </div>
+  <div class="deco-dots"><span></span><span></span><span></span><span></span></div>
+  <div class="quote-box">
+    <div class="quote-text">"El nepohualtzintzin no es solo un instrumento para contar: es un puente entre la mente, las manos y la memoria de nuestros antepasados."</div>
+    <div class="quote-author">— Sabiduría mesoamericana</div>
+  </div>
+  <p style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:1.25rem;line-height:1.7;">Aprende a usar el ábaco que usaban los mayas y aztecas.<br>Ideal para 5° de primaria en adelante.</p>
+  <div class="deco-divider"></div>
+  <button class="btn-p" onclick="goMode()">Comenzar</button>
+  <button class="btn-s" onclick="showAbout()">¿Qué es el nepohualtzintzin?</button>
+</div>
+<!-- FIN PEDAZO 1 -->
