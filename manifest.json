@@ -1,0 +1,14 @@
+{
+  "name": "Nepohualtzintzin — Herramienta de conteo",
+  "short_name": "Nepohual",
+  "description": "Aprende a usar el nepohualtzintzin con sesiones interactivas, en cuatro lenguas originarias.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e8dcc0",
+  "theme_color": "#e8dcc0",
+  "lang": "es",
+  "categories": ["education", "kids"],
+  "icons": []
+}
