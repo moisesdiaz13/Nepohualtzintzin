@@ -262,3 +262,783 @@ body{
 </head>
 <body>
 <!-- FIN PEDAZO 1 -->
+  
+<div class="toast" id="toast"></div>
+
+<!-- HEADER FIJO -->
+<header class="header-fixed" id="header">
+  <div>
+    <div class="header-title">Nepohualtzintzin</div>
+    <div class="header-sub">Ábaco mesoamericano</div>
+  </div>
+  <svg class="header-icon" viewBox="0 0 64 40" fill="none">
+    <ellipse cx="32" cy="20" rx="30" ry="18" stroke="#B01E1E" stroke-width="2"/>
+    <circle cx="32" cy="20" r="6" fill="#E5A82E"/>
+    <circle cx="34.5" cy="17.5" r="2" fill="#F0E9D8"/>
+  </svg>
+</header>
+
+<div class="app">
+
+<!-- WELCOME -->
+<div class="screen active" id="s-welcome">
+  <div class="logo-wrap">
+    <svg width="110" height="110" viewBox="0 0 110 110" fill="none" style="display:block;margin:0 auto 0.75rem;">
+      <circle cx="55" cy="55" r="50" fill="#1f2e24" stroke="#B01E1E" stroke-width="2.5"/>
+      <circle cx="55" cy="55" r="43" fill="none" stroke="#E5A82E" stroke-width="1.2" stroke-dasharray="4,5" opacity=".7"/>
+      <line x1="20" y1="55" x2="90" y2="55" stroke="#2BB3E0" stroke-width="2.5"/>
+      <circle cx="34" cy="43" r="5.5" fill="#E5A82E"/>
+      <circle cx="55" cy="43" r="5.5" fill="#E5A82E"/>
+      <circle cx="76" cy="43" r="5.5" fill="#E5A82E"/>
+      <circle cx="34" cy="68" r="5.5" fill="#B01E1E"/>
+      <circle cx="55" cy="68" r="5.5" fill="#F0E9D8"/>
+      <circle cx="76" cy="68" r="5.5" fill="#B01E1E"/>
+    </svg>
+    <div class="app-title">Nepohualtzintzin</div>
+    <div class="app-sub">El ábaco mesoamericano</div>
+  </div>
+  <div class="deco-dots"><span></span><span></span><span></span><span></span></div>
+  <div class="quote-box">
+    <div class="quote-text">"El nepohualtzintzin no es solo un instrumento para contar: es un puente entre la mente, las manos y la memoria de nuestros antepasados."</div>
+    <div class="quote-author">— Sabiduría mesoamericana</div>
+  </div>
+  <p style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:1.25rem;line-height:1.7;">Aprende a usar el ábaco que usaban los mayas y aztecas.<br>Ideal para 5° de primaria en adelante.</p>
+  <div class="deco-divider"></div>
+  <button class="btn-p" onclick="goMode()">Comenzar</button>
+  <button class="btn-s" onclick="showAbout()">¿Qué es el nepohualtzintzin?</button>
+</div>
+
+<!-- SELECCIÓN DE MODO -->
+<div class="screen" id="s-mode">
+  <div style="font-size:17px;font-weight:600;margin-bottom:1rem;">Elige tu camino</div>
+  <button class="glyph-btn" onclick="goStudent()">
+    <svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="28" fill="#2BB3E0" opacity=".2" stroke="#2BB3E0" stroke-width="1.5"/><text x="30" y="40" font-size="32" text-anchor="middle">🎓</text></svg>
+    <div class="glyph-title">Soy estudiante</div>
+    <div class="glyph-desc">Aprende a usar el ábaco jugando y practicando</div>
+  </button>
+  <button class="glyph-btn" onclick="goTeacher()">
+    <svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="28" fill="#B01E1E" opacity=".2" stroke="#B01E1E" stroke-width="1.5"/><text x="30" y="40" font-size="32" text-anchor="middle">📖</text></svg>
+    <div class="glyph-title">Soy maestro</div>
+    <div class="glyph-desc">Guía didáctica, contexto cultural y cómo armar la pulsera</div>
+  </button>
+  <button class="btn-s" onclick="screen('s-welcome')" style="margin-top:1rem;">← Volver</button>
+</div>
+
+<!-- ESTUDIANTE: MENÚ DE SESIONES -->
+<div class="screen" id="s-student">
+  <div style="font-size:17px;font-weight:600;margin-bottom:0.75rem;">Sesiones de aprendizaje</div>
+  <p style="font-size:12px;color:var(--text2);margin-bottom:1rem;line-height:1.5;">Completa cada sesión tocando las cuentas del ábaco. Tu progreso se guarda automáticamente.</p>
+
+  <div id="sesiones-container"></div>
+
+  <button class="btn-s" onclick="goMode()" style="margin-top:0.5rem;">← Volver</button>
+</div>
+
+<!-- SESIÓN: ÁBACO INTERACTIVO -->
+<div class="screen" id="s-sesion">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.5rem;">
+    <button class="btn-s" onclick="goStudent()" style="width:auto;margin:0;padding:8px 12px;font-size:12px;">←</button>
+    <div style="flex:1;">
+      <div id="sesion-titulo" style="font-size:15px;font-weight:700;color:var(--bone);">Sesión</div>
+      <div id="sesion-sub" style="font-size:11px;color:var(--bone-dim);">Ejercicio</div>
+    </div>
+    <div id="sesion-progreso" style="font-size:11px;color:var(--turquoise);font-weight:700;">1/5</div>
+  </div>
+
+  <div id="sesion-instr" class="guide-sec" style="margin-bottom:0.5rem;">
+    <div class="guide-body" id="sesion-instr-txt">Instrucción</div>
+  </div>
+
+  <div id="sesion-value-box"></div>
+
+  <div class="abacus-container">
+    <button class="btn-rotate" id="btn-rotate" onclick="toggleRotate()" title="Girar ábaco">🔄</button>
+    <div class="nepohual-wrap" id="nepohual-wrap">
+      <div class="nepohual" id="abacus-sesion"></div>
+    </div>
+  </div>
+
+  <div class="check-btns">
+    <button class="btn-s" onclick="limpiarSesion()" style="margin:0;">Limpiar</button>
+    <button class="btn-p" onclick="verificarSesion()" style="margin:0;">Verificar</button>
+  </div>
+
+  <button class="btn-s" onclick="siguienteEjercicio()" id="btn-siguiente" style="display:none;margin-top:0.75rem;">Siguiente ejercicio →</button>
+</div>
+
+<!-- COMPLETADO -->
+<div class="screen" id="s-complete">
+  <div class="complete-area">
+    <div class="complete-icon" id="c-icon">🎉</div>
+    <div class="complete-title" id="c-title">¡Correcto!</div>
+    <div class="complete-sub" id="c-msg"></div>
+    <div class="complete-meta" id="c-meta"></div>
+    <button class="btn-p" onclick="cerrarComplete()" id="btn-cerrar">Continuar</button>
+  </div>
+</div>
+
+<!-- MAESTRO -->
+<div class="screen" id="s-teacher">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+    <button class="btn-s" onclick="goMode()" style="width:auto;margin:0;padding:8px 12px;font-size:12px;">←</button>
+    <div style="font-size:17px;font-weight:600;">Guía del Maestro</div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">📖 ¿Qué es el nepohualtzintzin?</div>
+    <div class="guide-body">Es un ábaco mesoamericano de origen <strong>olmeca</strong>, perfeccionado por <strong>mayas</strong> y <strong>aztecas</strong>. Su nombre significa aproximadamente <em>"el que cuenta con los dedos"</em>.<br><br>Tiene <strong>13 varillas</strong> y <strong>7 cuentas por varilla</strong> (3 arriba de valor 5, 4 abajo de valor 1).<br><br>Las 13 varillas se asocian con las <strong>13 articulaciones principales</strong> del cuerpo humano: tobillos, rodillas, caderas, muñecas, codos, hombros y cuello.</div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🌎 Contexto cultural</div>
+    <div class="guide-body">• La <strong>base 20</strong> viene de contar con los 20 dedos (manos + pies).<br>• Se usaba para comercio, calendario y astronomía.<br>• Sobrevive hoy en comunidades de México y Guatemala.<br>• La pulsera física se usa en la muñeca, en horizontal.</div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🎯 Secuencia didáctica sugerida</div>
+    <div class="guide-body">
+      <strong>Sesión 1:</strong> Contexto histórico y primer contacto (45 min).<br><br>
+      <strong>Sesión 2:</strong> Taller de armado de la pulsera (60 min).<br><br>
+      <strong>Sesión 3:</strong> Contar del 1 al 20 (45 min).<br><br>
+      <strong>Sesión 4:</strong> Sumas simples (45 min).<br><br>
+      <strong>Sesión 5:</strong> Reto y evaluación (45 min).
+    </div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">⚠️ Errores comunes</div>
+    <div class="guide-body">
+      • Contar cuentas que <strong>no tocan la barra central</strong>.<br>
+      • Confundir el valor 5 con el 1.<br>
+      • Olvidar que cada varilla vale 10 veces más.<br>
+      • Empezar por la varilla equivocada (siempre de derecha a izquierda).
+    </div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🧵 Cómo armar la pulsera física</div>
+    <div class="guide-body">
+      <strong>Materiales por pulsera:</strong><br>
+      • Fieltro grueso verde agave (2 piezas ~20×15 cm)<br>
+      • Hilo de bordar hueso, rojo y ocre<br>
+      • Cordón encerado (para las 13 varillas)<br>
+      • 91 cuentas: 39 ocre (arriba) + 52 rojas/hueso alternadas (abajo)<br>
+      • Aguja, tijeras, velcro o broche
+    </div>
+  </div>
+
+  <div style="margin-top:0.5rem;">
+    <div class="step-row"><div class="step-num">1</div><div class="step-txt">Cortar las 2 piezas de fieltro con forma de glifo (usar plantilla de papel).</div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-txt">Bordar los glifos rojos en la pieza frontal con punto festón.</div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-txt">Marcar las 13 líneas verticales con separación uniforme (~1 cm).</div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-txt">Perforar 9 agujeros por varilla (7 para cuentas + 2 extremos).</div></div>
+    <div class="step-row"><div class="step-num">5</div><div class="step-txt">Enhebrar: 3 cuentas ocre arriba, luego 4 abajo (2 rojas + 2 hueso alternadas).</div></div>
+    <div class="step-row"><div class="step-num">6</div><div class="step-txt">Tensar el cordón y rematar por detrás.</div></div>
+    <div class="step-row"><div class="step-num">7</div><div class="step-txt">Coser las 2 piezas con punto festón hueso.</div></div>
+    <div class="step-row"><div class="step-num">8</div><div class="step-txt">Añadir velcro o broche trasero. ¡Listo!</div></div>
+  </div>
+</div>
+
+<!-- AJUSTES -->
+<div class="screen" id="s-settings">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+    <button class="btn-s" onclick="goStudent()" style="width:auto;margin:0;padding:8px 12px;font-size:12px;">←</button>
+    <div style="font-size:17px;font-weight:600;">Configuración</div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Varillas</div><div class="setting-sub">Cantidad de columnas</div></div>
+    <div class="seg" id="seg-varillas">
+      <button data-v="4" onclick="setVarillas(4)">4</button>
+      <button data-v="6" onclick="setVarillas(6)">6</button>
+      <button data-v="13" onclick="setVarillas(13)">13</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Base numérica</div><div class="setting-sub">10 = primaria, 20 = tradicional</div></div>
+    <div class="seg" id="seg-base">
+      <button data-b="10" onclick="setBase(10)">10</button>
+      <button data-b="20" onclick="setBase(20)">20</button>
+    </div>
+  </div>
+  <button class="btn-s" onclick="resetProgress()" style="margin-top:1rem;color:var(--red);border-color:var(--red);">Borrar progreso</button>
+</div>
+
+</div><!-- cierra .app -->
+<!-- FIN PEDAZO 2 -->
+  
+<script>
+// ═══════════════════════════════════════════════════════════
+// NEPOHUALTZINTZIN — App completa
+// ═══════════════════════════════════════════════════════════
+
+const STATE={
+  varillas:4,
+  base:10,
+  abacus:null,           // ábaco de la sesión activa
+  rotado:false,          // modo horizontal del ábaco
+  sesionActual:null,     // sesión abierta
+  ejercicioIdx:0,        // índice dentro de la sesión
+  target:0,              // número objetivo
+  correcto:false,        // si ya verificó y acertó
+  progreso:JSON.parse(localStorage.getItem('nepo_progreso')||'{}'),
+  settings:JSON.parse(localStorage.getItem('nepo_settings')||'{"varillas":4,"base":10}'),
+};
+
+// ═══════════════════════════════════════════════════════════
+// CATÁLOGO DE SESIONES (14)
+// ═══════════════════════════════════════════════════════════
+
+const BLOQUES=[
+  {
+    id:'basico',
+    icono:'📱',
+    titulo:'Básico',
+    desc:'Fundamentos del ábaco',
+    sesiones:[
+      { id:'b1', icono:'1️⃣', nombre:'Contar del 1 al 9', desc:'Unidades con cuentas de 1 y 5', tipo:'contar', rango:[1,9], total:5, instr:'Representa en el ábaco el número que ves. Usa las cuentas de abajo (valen 1) y las de arriba (valen 5).' },
+      { id:'b2', icono:'🔟', nombre:'Contar del 10 al 99', desc:'Decenas y unidades juntas', tipo:'contar', rango:[10,99], total:5, instr:'Ahora representa números de dos cifras. Recuerda: la primera varilla es unidades, la segunda decenas.' },
+      { id:'b3', icono:'💯', nombre:'Contar del 100 al 999', desc:'Centenas, decenas y unidades', tipo:'contar', rango:[100,999], total:5, instr:'Representa números de tres cifras. La tercera varilla son centenas.' },
+      { id:'b4', icono:'🔍', nombre:'Adivina el número', desc:'Lee el ábaco y di qué número es', tipo:'adivinar', rango:[1,99], total:5, instr:'Mira el ábaco ya armado. ¿Qué número representa? Toca la respuesta correcta.' },
+    ]
+  },
+  {
+    id:'sumas',
+    icono:'➕',
+    titulo:'Intermedio — Sumas',
+    desc:'Sumar con el ábaco',
+    sesiones:[
+      { id:'s1', icono:'➕', nombre:'Sumas sin acarreo', desc:'Ej: 23 + 15 = 38', tipo:'suma', rango:[[10,49],[10,49]], total:5, instr:'Resuelve la suma en el ábaco. Resultado esperado abajo.' },
+      { id:'s2', icono:'➕', nombre:'Sumas con acarreo', desc:'Ej: 27 + 15 = 42', tipo:'suma', rango:[[15,49],[15,49]], total:5, instr:'Estas sumas llevan "acarreo". Cuando la varilla se pasa de 9, sube 1 a la siguiente.' },
+      { id:'s3', icono:'🎯', nombre:'Reto de sumas', desc:'Sumas variadas', tipo:'suma', rango:[[20,99],[10,99]], total:8, instr:'Reto: 8 sumas seguidas. ¡A ver cuántas aciertas!' },
+    ]
+  },
+  {
+    id:'restas',
+    icono:'➖',
+    titulo:'Intermedio — Restas',
+    desc:'Restar con el ábaco',
+    sesiones:[
+      { id:'r1', icono:'➖', nombre:'Restas sin préstamo', desc:'Ej: 38 - 15 = 23', tipo:'resta', rango:[[20,99],[5,20]], total:5, instr:'Resuelve la resta en el ábaco. La segunda varilla puede quedar en 0.' },
+      { id:'r2', icono:'➖', nombre:'Restas con préstamo', desc:'Ej: 42 - 15 = 27', tipo:'resta', rango:[[30,99],[15,40]], total:5, instr:'Estas restas llevan "préstamo". Cuando no alcanzan las unidades, pides una decena.' },
+      { id:'r3', icono:'🎯', nombre:'Reto de restas', desc:'Restas variadas', tipo:'resta', rango:[[40,99],[10,40]], total:8, instr:'Reto: 8 restas seguidas. ¡Concentración!' },
+    ]
+  },
+  {
+    id:'mult',
+    icono:'✖️',
+    titulo:'Avanzado — Multiplicación',
+    desc:'Multiplicar con el ábaco',
+    sesiones:[
+      { id:'m1', icono:'✖️', nombre:'Multiplicar por 1 dígito', desc:'Ej: 23 × 3 = 69', tipo:'multi', rango:[[5,49],[2,9]], total:5, instr:'Multiplica en el ábaco el resultado. Puedes hacer la operación mental y luego representarla.' },
+      { id:'m2', icono:'✖️', nombre:'Multiplicar por 2 dígitos', desc:'Ej: 12 × 11 = 132', tipo:'multi', rango:[[5,25],[5,15]], total:5, instr:'Multiplicaciones más grandes. El resultado puede llegar a miles.' },
+    ]
+  },
+  {
+    id:'div',
+    icono:'➗',
+    titulo:'Avanzado — División',
+    desc:'Dividir con el ábaco',
+    sesiones:[
+      { id:'d1', icono:'➗', nombre:'División simple', desc:'Ej: 48 ÷ 6 = 8', tipo:'divi', rango:[[2,9]], total:5, instr:'Representa el resultado de la división. Si no es exacta, usa la parte entera.' },
+      { id:'d2', icono:'➗', nombre:'División con residuo', desc:'Ej: 50 ÷ 7 = 7 r=1', tipo:'divi', rango:[[3,9]], total:5, instr:'Representa el cociente (sin decimales). El residuo lo anotas mentalmente.' },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════════
+// AUDIO
+// ═══════════════════════════════════════════════════════════
+
+let AC=null;
+function getAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
+function playClick(){
+  try{const ac=getAC(),t=ac.currentTime;
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);o.type='sine';
+    o.frequency.setValueAtTime(880,t);
+    o.frequency.exponentialRampToValueAtTime(440,t+0.05);
+    g.gain.setValueAtTime(0.12,t);
+    g.gain.exponentialRampToValueAtTime(0.001,t+0.08);
+    o.start(t);o.stop(t+0.09);
+  }catch(e){}
+}
+function playChime(){
+  try{const ac=getAC(),t=ac.currentTime;
+    [523,659,784,1047].forEach((f,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.connect(g);g.connect(ac.destination);o.type='sine';
+      o.frequency.value=f;
+      g.gain.setValueAtTime(0,t+i*0.1);
+      g.gain.linearRampToValueAtTime(0.3,t+i*0.1+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001,t+i*0.1+0.7);
+      o.start(t+i*0.1);o.stop(t+i*0.1+0.75);
+    });
+  }catch(e){}
+}
+function playError(){
+  try{const ac=getAC(),t=ac.currentTime;
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);o.type='triangle';
+    o.frequency.setValueAtTime(220,t);
+    o.frequency.exponentialRampToValueAtTime(180,t+0.2);
+    g.gain.setValueAtTime(0.18,t);
+    g.gain.exponentialRampToValueAtTime(0.001,t+0.25);
+    o.start(t);o.stop(t+0.3);
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════════
+// ÁBACO
+// ═══════════════════════════════════════════════════════════
+
+function createAbacus(n){
+  const v=[];
+  for(let i=0;i<n;i++){
+    v.push({
+      posicion:i,
+      cuentasSuperiores:[false,false,false],
+      cuentasInferiores:[false,false,false,false]
+    });
+  }
+  return {varillas:v};
+}
+function varillaValor(v){
+  return v.cuentasSuperiores.filter(Boolean).length*5 + v.cuentasInferiores.filter(Boolean).length;
+}
+function abacusValor(a){
+  let t=0;
+  a.varillas.forEach((v,i)=>{ t += varillaValor(v) * Math.pow(STATE.base, i); });
+  return t;
+}
+function limpiarAbacus(){
+  if(!STATE.abacus)return;
+  STATE.abacus.varillas.forEach(v=>{
+    v.cuentasSuperiores=[false,false,false];
+    v.cuentasInferiores=[false,false,false,false];
+  });
+  renderAbacus();
+}
+function renderAbacus(){
+  const c=document.getElementById('abacus-sesion');
+  const a=STATE.abacus;
+  if(!c||!a)return;
+  c.innerHTML='';
+  a.varillas.forEach((v,vi)=>{
+    const col=document.createElement('div');
+    col.className='varilla';
+    const inner=document.createElement('div');
+    inner.className='varilla-inner';
+    // 3 superiores (ocre)
+    v.cuentasSuperiores.forEach((act,bi)=>{
+      const sl=document.createElement('div');sl.className='bead-slot';
+      const b=document.createElement('div');b.className='bead ocre';
+      b.style.transform=act?'translateY(16px)':'translateY(-2px)';
+      b.onclick=()=>toggleBead(vi,'sup',bi);
+      sl.appendChild(b);inner.appendChild(sl);
+    });
+    // barra central
+    const bar=document.createElement('div');bar.className='bar-center';
+    inner.appendChild(bar);
+    // 4 inferiores (rojo/hueso alternadas)
+    v.cuentasInferiores.forEach((act,bi)=>{
+      const sl=document.createElement('div');sl.className='bead-slot';
+      const b=document.createElement('div');
+      b.className='bead '+(bi%2===1?'red':'bone');
+      b.style.transform=act?'translateY(-16px)':'translateY(2px)';
+      b.onclick=()=>toggleBead(vi,'inf',bi);
+      sl.appendChild(b);inner.appendChild(sl);
+    });
+    col.appendChild(inner);
+    // etiqueta
+    const lb=document.createElement('div');lb.className='varilla-label';
+    const p=a.varillas.length-1-vi;
+    lb.textContent = p===0?'U':(STATE.base===10?'10^'+p:STATE.base+'^'+p);
+    col.appendChild(lb);
+    c.appendChild(col);
+  });
+  updateValorBox();
+}
+function toggleBead(vi,type,bi){
+  if(STATE.correcto)return; // bloqueado tras acertar
+  const v=STATE.abacus.varillas[vi];
+  if(type==='sup') v.cuentasSuperiores[bi]=!v.cuentasSuperiores[bi];
+  else v.cuentasInferiores[bi]=!v.cuentasInferiores[bi];
+  playClick();
+  renderAbacus();
+}
+function updateValorBox(){
+  const box=document.getElementById('sesion-value-box');
+  if(!box||!STATE.abacus)return;
+  const val=abacusValor(STATE.abacus);
+  const s=STATE.sesionActual;
+  if(!s){box.innerHTML='';return;}
+  if(s.tipo==='adivinar'){
+    box.innerHTML=`
+      <div class="value-display">
+        <div class="value-label">¿Qué número es?</div>
+        <div class="value-number" style="font-size:28px;">Toca tu respuesta abajo</div>
+      </div>`;
+    return;
+  }
+  let objetivo='';
+  if(s.tipo==='contar') objetivo=`Representa el número <strong>${STATE.target}</strong>`;
+  else if(s.tipo==='suma') objetivo=`Suma: <strong>${STATE.target.a} + ${STATE.target.b}</strong>`;
+  else if(s.tipo==='resta') objetivo=`Resta: <strong>${STATE.target.a} − ${STATE.target.b}</strong>`;
+  else if(s.tipo==='multi') objetivo=`Multiplica: <strong>${STATE.target.a} × ${STATE.target.b}</strong>`;
+  else if(s.tipo==='divi') objetivo=`Divide: <strong>${STATE.target.a} ÷ ${STATE.target.b}</strong>`;
+  box.innerHTML=`
+    <div class="value-display">
+      <div class="value-label">${objetivo}</div>
+      <div class="value-target" style="margin-top:8px;">Valor actual</div>
+      <div class="value-number" style="font-size:36px;">${val}</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// ROTACIÓN DEL ÁBACO
+// ═══════════════════════════════════════════════════════════
+
+function toggleRotate(){
+  STATE.rotado=!STATE.rotado;
+  const wrap=document.getElementById('nepohual-wrap');
+  const btn=document.getElementById('btn-rotate');
+  if(wrap) wrap.classList.toggle('rotado',STATE.rotado);
+  if(btn) btn.classList.toggle('activo',STATE.rotado);
+}
+
+// ═══════════════════════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════════════════════
+
+function screen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function showToast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+function goMode(){screen('s-mode');}
+function goStudent(){
+  screen('s-student');
+  renderSesiones();
+}
+function goTeacher(){screen('s-teacher');}
+function showAbout(){
+  showToast('Ábaco mesoamericano de origen olmeca');
+  setTimeout(goMode,900);
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER DE SESIONES (estilo FOOax)
+// ═══════════════════════════════════════════════════════════
+
+function renderSesiones(){
+  const cont=document.getElementById('sesiones-container');
+  if(!cont)return;
+  cont.innerHTML='';
+  BLOQUES.forEach(bloque=>{
+    const completadas=bloque.sesiones.filter(s=>STATE.progreso[s.id]).length;
+    const total=bloque.sesiones.length;
+    const pct=total>0?Math.round(100*completadas/total):0;
+
+    const div=document.createElement('div');
+    div.className='sesion-bloque';
+    div.innerHTML=`
+      <div class="sesion-bloque-header">
+        <div class="sesion-icon">${bloque.icono}</div>
+        <div style="flex:1;">
+          <div class="sesion-titulo">${bloque.titulo}</div>
+          <div class="sesion-progreso">${completadas} de ${total} sesiones completadas</div>
+        </div>
+      </div>
+      <div class="sesion-barra"><div class="sesion-barra-fill" style="width:${pct}%"></div></div>
+      <div class="sesion-lista" id="lista-${bloque.id}"></div>
+    `;
+    cont.appendChild(div);
+
+    const lista=div.querySelector(`#lista-${bloque.id}`);
+    bloque.sesiones.forEach(s=>{
+      const hecha=!!STATE.progreso[s.id];
+      const item=document.createElement('div');
+      item.className='sesion-item'+(hecha?' completada':'');
+      item.innerHTML=`
+        <div class="sesion-item-icon">${s.icono}</div>
+        <div class="sesion-item-info">
+          <div class="sesion-item-nombre">${s.nombre}</div>
+          <div class="sesion-item-desc">${s.desc}</div>
+        </div>
+        <div class="sesion-item-check">${hecha?'✓':''}</div>
+      `;
+      item.onclick=()=>abrirSesion(bloque.id,s.id);
+      lista.appendChild(item);
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// SESIÓN — LÓGICA
+// ═══════════════════════════════════════════════════════════
+
+function abrirSesion(bloqueId,sesionId){
+  const bloque=BLOQUES.find(b=>b.id===bloqueId);
+  if(!bloque)return;
+  const sesion=bloque.sesiones.find(s=>s.id===sesionId);
+  if(!sesion)return;
+
+  STATE.sesionActual=sesion;
+  STATE.ejercicioIdx=0;
+  STATE.aciertos=0;
+  STATE.abacus=createAbacus(STATE.varillas);
+  STATE.correcto=false;
+  STATE.rotado=false;
+  document.getElementById('nepohual-wrap').classList.remove('rotado');
+  document.getElementById('btn-rotate').classList.remove('activo');
+
+  document.getElementById('sesion-titulo').textContent=sesion.nombre;
+  document.getElementById('sesion-sub').textContent=bloque.titulo;
+  document.getElementById('sesion-instr-txt').textContent=sesion.instr;
+
+  generarEjercicio();
+  screen('s-sesion');
+}
+
+function generarEjercicio(){
+  const s=STATE.sesionActual;
+  if(!s)return;
+  limpiarAbacus();
+  STATE.correcto=false;
+  document.getElementById('btn-siguiente').style.display='none';
+  document.getElementById('sesion-progreso').textContent=`${STATE.ejercicioIdx+1}/${s.total}`;
+
+  if(s.tipo==='contar'){
+    STATE.target=randInt(s.rango[0],s.rango[1]);
+    renderAbacus();
+    updateValorBox();
+  }
+  else if(s.tipo==='adivinar'){
+    // Genera número y lo pre-carga en el ábaco
+    STATE.target=randInt(s.rango[0],s.rango[1]);
+    colocarNumeroEnAbacus(STATE.target);
+    renderAbacus();
+    mostrarOpcionesAdivinar();
+  }
+  else if(s.tipo==='suma'){
+    const a=randInt(s.rango[0][0],s.rango[0][1]);
+    const b=randInt(s.rango[1][0],s.rango[1][1]);
+    STATE.target={a,b,resultado:a+b};
+    renderAbacus();updateValorBox();
+  }
+  else if(s.tipo==='resta'){
+    let a=randInt(s.rango[0][0],s.rango[0][1]);
+    let b=randInt(s.rango[1][0],s.rango[1][1]);
+    if(b>a){[a,b]=[b,a];}
+    STATE.target={a,b,resultado:a-b};
+    renderAbacus();updateValorBox();
+  }
+  else if(s.tipo==='multi'){
+    const a=randInt(s.rango[0][0],s.rango[0][1]);
+    const b=randInt(s.rango[1][0],s.rango[1][1]);
+    STATE.target={a,b,resultado:a*b};
+    renderAbacus();updateValorBox();
+  }
+  else if(s.tipo==='divi'){
+    const b=randInt(s.rango[0][0],s.rango[0][1]);
+    const resultado=randInt(2,9);
+    const a=b*resultado + randInt(0,b-1);
+    STATE.target={a,b,resultado:Math.floor(a/b)};
+    renderAbacus();updateValorBox();
+  }
+}
+
+function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+function colocarNumeroEnAbacus(num){
+  const a=STATE.abacus;
+  let n=num;
+  a.varillas.forEach((v,i)=>{
+    const divisor=Math.pow(STATE.base,i);
+    const digito=Math.floor(n/divisor)%STATE.base;
+    const arriba=Math.floor(digito/5);
+    const abajo=digito%5;
+    v.cuentasSuperiores=[0,1,2].map(k=>k<arriba);
+    v.cuentasInferiores=[0,1,2,3].map(k=>k<abajo);
+  });
+}
+
+function limpiarSesion(){limpiarAbacus();}
+
+function verificarSesion(){
+  const s=STATE.sesionActual;
+  if(!s||STATE.correcto)return;
+  const val=abacusValor(STATE.abacus);
+  let esperado;
+  if(s.tipo==='contar') esperado=STATE.target;
+  else if(s.tipo==='adivinar') esperado=null; // se maneja en botones
+  else esperado=STATE.target.resultado;
+
+  if(s.tipo==='adivinar')return;
+
+  if(val===esperado){
+    STATE.correcto=true;
+    STATE.aciertos=(STATE.aciertos||0)+1;
+    playChime();
+    document.getElementById('btn-siguiente').style.display='block';
+    if(!STATE.progreso[s.id]) STATE.progreso[s.id]=0;
+    STATE.progreso[s.id]=Math.max(STATE.progreso[s.id],STATE.ejercicioIdx+1);
+    guardarProgreso();
+    mostrarComplete('🎉','¡Correcto!',`Representaste ${esperado} correctamente.`);
+  }else{
+    playError();
+    showToast('Casi... inténtalo de nuevo');
+  }
+}
+
+function mostrarOpcionesAdivinar(){
+  const s=STATE.sesionActual;
+  const correcto=STATE.target;
+  const opciones=new Set([correcto]);
+  while(opciones.size<4){
+    opciones.add(randInt(s.rango[0],s.rango[1]));
+  }
+  const arr=[...opciones].sort(()=>Math.random()-0.5);
+  const box=document.getElementById('sesion-value-box');
+  box.innerHTML=`
+    <div class="value-display" style="padding:0.75rem;">
+      <div class="value-label">¿Qué número es?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+        ${arr.map(n=>`<button class="btn-s" style="margin:0;font-size:18px;font-weight:700;padding:14px;" onclick="responderAdivinar(${n},${correcto})">${n}</button>`).join('')}
+      </div>
+    </div>`;
+}
+
+function responderAdivinar(elegido,correcto){
+  if(STATE.correcto)return;
+  if(elegido===correcto){
+    STATE.correcto=true;
+    STATE.aciertos=(STATE.aciertos||0)+1;
+    playChime();
+    const s=STATE.sesionActual;
+    if(!STATE.progreso[s.id]) STATE.progreso[s.id]=0;
+    STATE.progreso[s.id]=Math.max(STATE.progreso[s.id],STATE.ejercicioIdx+1);
+    guardarProgreso();
+    document.getElementById('btn-siguiente').style.display='block';
+    mostrarComplete('🎉','¡Correcto!',`El número era ${correcto}.`);
+  }else{
+    playError();
+    showToast('No es ese... mira otra vez');
+  }
+}
+
+function siguienteEjercicio(){
+  const s=STATE.sesionActual;
+  if(!s)return;
+  STATE.ejercicioIdx++;
+  if(STATE.ejercicioIdx>=s.total){
+    // Sesión completada
+    STATE.progreso[s.id]=s.total;
+    guardarProgreso();
+    mostrarComplete('🌟','¡Sesión completada!',`Terminaste "${s.nombre}". ¡Buen trabajo!`);
+    document.getElementById('btn-siguiente').style.display='none';
+    document.getElementById('btn-cerrar').onclick=()=>{cerrarComplete();goStudent();};
+    document.getElementById('btn-cerrar').textContent='Volver a sesiones';
+  }else{
+    generarEjercicio();
+  }
+}
+
+function guardarProgreso(){
+  localStorage.setItem('nepo_progreso',JSON.stringify(STATE.progreso));
+}
+
+// ═══════════════════════════════════════════════════════════
+// COMPLETE / MODAL
+// ═══════════════════════════════════════════════════════════
+
+function mostrarComplete(icon,titulo,msg){
+  document.getElementById('c-icon').textContent=icon;
+  document.getElementById('c-title').textContent=titulo;
+  document.getElementById('c-msg').textContent=msg;
+  const s=STATE.sesionActual;
+  const meta=STATE.aciertos?`Aciertos: ${STATE.aciertos}`:'';
+  document.getElementById('c-meta').textContent=meta;
+  const btn=document.getElementById('btn-cerrar');
+  btn.textContent='Continuar';
+  btn.onclick=cerrarComplete;
+  screen('s-complete');
+}
+
+function cerrarComplete(){
+  if(STATE.ejercicioIdx>=STATE.sesionActual.total){
+    goStudent();
+  }else{
+    screen('s-sesion');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// AJUSTES
+// ═══════════════════════════════════════════════════════════
+
+function openSettings(){
+  screen('s-settings');
+  document.querySelectorAll('#seg-varillas button').forEach(b=>{
+    b.className=(+b.dataset.v===STATE.varillas)?'on':'';
+  });
+  document.querySelectorAll('#seg-base button').forEach(b=>{
+    b.className=(+b.dataset.b===STATE.base)?'on':'';
+  });
+}
+function setVarillas(v){
+  STATE.varillas=v;
+  STATE.settings.varillas=v;
+  localStorage.setItem('nepo_settings',JSON.stringify(STATE.settings));
+  document.querySelectorAll('#seg-varillas button').forEach(b=>{
+    b.className=(+b.dataset.v===v)?'on':'';
+  });
+  showToast('Varillas: '+v);
+}
+function setBase(b){
+  STATE.base=b;
+  STATE.settings.base=b;
+  localStorage.setItem('nepo_settings',JSON.stringify(STATE.settings));
+  document.querySelectorAll('#seg-base button').forEach(x=>{
+    x.className=(+x.dataset.b===b)?'on':'';
+  });
+  showToast('Base: '+b);
+}
+function resetProgress(){
+  if(!confirm('¿Borrar todo el progreso?'))return;
+  STATE.progreso={};
+  localStorage.removeItem('nepo_progreso');
+  showToast('Progreso borrado');
+}
+
+// ═══════════════════════════════════════════════════════════
+// INICIALIZACIÓN
+// ═══════════════════════════════════════════════════════════
+
+// Cargar settings
+if(STATE.settings.varillas)STATE.varillas=STATE.settings.varillas;
+if(STATE.settings.base)STATE.base=STATE.settings.base;
+
+// Detección de landscape del dispositivo (oculta header)
+function checkOrientation(){
+  const isLandscape=window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
+  const header=document.getElementById('header');
+  if(header) header.style.display=isLandscape?'none':'';
+}
+window.addEventListener('resize',checkOrientation);
+window.addEventListener('orientationchange',()=>setTimeout(checkOrientation,100));
+checkOrientation();
+
+// Service Worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
+<!-- FIN PEDAZO 3 -->
