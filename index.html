@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0A0A0A">
+<meta name="description" content="Aprende a usar el nepohualtzintzin, el ábaco mesoamericano. Guía para estudiantes y maestros.">
+<title>Nepohualtzintzin — Ábaco Mesoamericano</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{
+  --red:#B01E1E;--red-light:#D62828;--red-dark:#7A1414;
+  --turquoise:#2BB3E0;--turquoise-light:#5FCCF0;--turquoise-dark:#156B8C;
+  --ocre:#E5A82E;--ocre-light:#F2C566;--ocre-dark:#8C6218;
+  --bone:#F0E9D8;--bone-dim:#A89F8B;--bone-faint:rgba(240,233,216,0.15);
+  --black:#0A0A0A;--black2:#151515;--black3:#1E1E1E;
+  --bg:var(--black);--bg2:var(--black2);--bg3:var(--black3);
+  --text:var(--bone);--text2:var(--bone-dim);--text3:#6b6558;
+  --border:var(--bone-faint);--border2:rgba(240,233,216,0.25);
+  --radius:12px;--radius-sm:8px;
+  --leather:#1a1510;--leather2:#0f0b08;
+  --bead:#F0E9D8;--bead-shadow:#8a7f68;
+  --bead-red:#B01E1E;--bead-red-shadow:#5a0f0f;
+  --stitch:var(--bone);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden;}
+.app{max-width:430px;margin:0 auto;padding:1rem 1rem 3rem;}
+.screen{display:none;}.screen.active{display:block;}
+.btn-p{width:100%;padding:14px;background:var(--red);color:var(--bone);border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:0.6rem;font-family:inherit;letter-spacing:.02em;transition:background .15s;}
+.btn-p:hover{background:var(--red-light);}
+.btn-p:disabled{background:var(--black3);color:var(--text3);cursor:default;}
+.btn-s{width:100%;padding:12px;background:transparent;color:var(--bone-dim);border:1px solid var(--border2);border-radius:var(--radius);font-size:14px;cursor:pointer;margin-bottom:0.5rem;font-family:inherit;transition:all .15s;}
+.btn-s:hover{background:var(--black2);color:var(--bone);border-color:var(--bone);}
+.logo-wrap{text-align:center;padding:2rem 0 1rem;}
+.app-title{font-size:24px;font-weight:700;color:var(--bone);text-align:center;letter-spacing:.03em;}
+.app-sub{font-size:13px;color:var(--ocre);text-align:center;margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
+.quote-box{background:var(--black2);border-left:3px solid var(--ocre);padding:0.9rem 1.1rem;margin:1.25rem 0;}
+.quote-text{font-size:13px;color:var(--bone);line-height:1.75;font-style:italic;}
+.quote-author{font-size:11px;color:var(--ocre);margin-top:6px;letter-spacing:.03em;}
+.top-row{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0 0.9rem;}
+.top-row > div:first-child{color:var(--bone);}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--turquoise);color:var(--black);padding:10px 18px;border-radius:var(--radius);font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:999;font-weight:600;letter-spacing:.02em;}
+.toast.show{opacity:1;}
+.glyph-btn{display:flex;flex-direction:column;align-items:center;padding:1.25rem;background:var(--black2);border:2px solid var(--bone-faint);border-radius:var(--radius);cursor:pointer;width:100%;margin-bottom:0.75rem;font-family:inherit;color:var(--bone);transition:all .15s;}
+.glyph-btn:hover{border-color:var(--red);background:var(--black3);}
+.glyph-btn .glyph-svg{margin-bottom:0.6rem;}
+.glyph-btn .glyph-title{font-size:17px;font-weight:600;color:var(--bone);letter-spacing:.02em;}
+.glyph-btn .glyph-desc{font-size:12px;color:var(--bone-dim);margin-top:3px;text-align:center;}
+.nepohual-wrap{background:var(--leather);border-radius:16px;padding:12px 8px;margin:0.9rem 0;position:relative;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;border:2px solid var(--red-dark);box-shadow:inset 0 0 30px rgba(0,0,0,0.8),0 4px 20px rgba(176,30,30,0.15);}
+.nepohual-wrap::before,.nepohual-wrap::after{content:'';position:absolute;left:0;right:0;height:6px;border-top:2px dashed var(--bone);opacity:.35;}
+.nepohual-wrap::before{top:6px;}
+.nepohual-wrap::after{bottom:6px;}
+.nepohual{display:inline-flex;gap:8px;padding:14px 10px;}
+.varilla{display:flex;flex-direction:column;align-items:center;width:42px;flex-shrink:0;}
+.varilla-inner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;height:290px;}
+.bead-slot{height:36px;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;}
+.bead{width:32px;height:32px;border-radius:50%;cursor:pointer;transition:transform .25s cubic-bezier(.4,1.6,.6,1),box-shadow .15s;position:relative;
+  background:radial-gradient(circle at 32% 30%,#ffffff,var(--bead) 55%,var(--bead-shadow) 100%);
+  box-shadow:0 2px 4px rgba(0,0,0,0.7),inset 0 -2px 3px rgba(0,0,0,0.25);}
+.bead.red{background:radial-gradient(circle at 32% 30%,#ff4a4a,var(--bead-red) 60%,var(--bead-red-shadow) 100%);}
+.bead::after{content:'';position:absolute;top:22%;left:22%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.85);filter:blur(1px);}
+.bead:active{transform:scale(0.92);}
+.bar-center{height:8px;width:100%;background:linear-gradient(to bottom,#4a2a1a,#2a1508,#4a2a1a);border-radius:2px;position:relative;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,0.8);}
+.varilla-label{font-size:10px;color:var(--ocre);opacity:.85;margin-top:6px;text-align:center;font-weight:600;letter-spacing:.05em;}
+.value-display{background:linear-gradient(135deg,var(--black2),var(--black));border-radius:14px;padding:1rem;text-align:center;margin:0.75rem 0;border:2px solid var(--red-dark);position:relative;box-shadow:0 4px 20px rgba(176,30,30,0.2);}
+.value-display::before{content:'';position:absolute;inset:5px;border:1px dashed var(--bone);border-radius:10px;opacity:.2;pointer-events:none;}
+.value-label{font-size:11px;color:var(--ocre);opacity:.9;letter-spacing:.15em;text-transform:uppercase;font-weight:600;}
+.value-number{font-size:42px;font-weight:700;color:var(--turquoise);letter-spacing:.05em;margin-top:4px;font-variant-numeric:tabular-nums;text-shadow:0 0 20px rgba(43,179,224,0.4);}
+.value-target{font-size:14px;color:var(--bone-dim);opacity:.9;margin-top:6px;}
+.value-target strong{color:var(--ocre);font-size:20px;letter-spacing:.03em;}
+.nav-tabs{display:flex;gap:6px;margin-bottom:0.9rem;}
+.nav-tab{flex:1;padding:9px;background:var(--black2);border:1px solid var(--bone-faint);border-radius:var(--radius-sm);font-size:13px;color:var(--bone-dim);cursor:pointer;font-weight:500;font-family:inherit;transition:all .15s;}
+.nav-tab.active{background:var(--red);color:var(--bone);border-color:var(--red);}
+.guide-sec{background:var(--black2);border-radius:var(--radius);padding:1rem;margin-bottom:0.75rem;border-left:3px solid var(--ocre);}
+.guide-title{font-size:15px;font-weight:600;color:var(--bone);margin-bottom:6px;display:flex;align-items:center;gap:6px;letter-spacing:.02em;}
+.guide-body{font-size:13px;color:var(--bone-dim);line-height:1.7;}
+.guide-body strong{color:var(--bone);}
+.guide-body ul{padding-left:1.2rem;margin:6px 0;}
+.guide-body li{margin-bottom:4px;}
+.guide-body code{background:var(--black3);color:var(--turquoise);padding:2px 6px;border-radius:4px;font-size:12px;font-family:'SF Mono',Menlo,monospace;}
+.step-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--red);color:var(--bone);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-txt{font-size:13px;color:var(--bone);line-height:1.6;padding-top:3px;}
+.difficulty-row{display:flex;gap:6px;margin-bottom:0.75rem;}
+.diff-btn{flex:1;padding:8px;background:var(--black2);border:1px solid var(--bone-faint);border-radius:var(--radius-sm);font-size:12px;color:var(--bone-dim);cursor:pointer;font-family:inherit;font-weight:500;transition:all .15s;}
+.diff-btn.active{background:var(--turquoise);color:var(--black);border-color:var(--turquoise);font-weight:700;}
+.check-btns{display:flex;gap:6px;margin-top:0.5rem;}
+.check-btns .btn-p,.check-btns .btn-s{margin-bottom:0;flex:1;}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0.9rem;background:var(--black2);border-radius:var(--radius-sm);margin-bottom:0.4rem;border:1px solid var(--bone-faint);}
+.setting-label{font-size:13px;color:var(--bone);font-weight:500;}
+.setting-sub{font-size:11px;color:var(--bone-dim);margin-top:2px;}
+.seg{display:flex;gap:4px;background:var(--black3);border-radius:8px;padding:3px;}
+.seg button{background:transparent;border:none;padding:5px 10px;border-radius:6px;font-size:12px;color:var(--bone-dim);cursor:pointer;font-family:inherit;font-weight:500;transition:all .15s;}
+.seg button.on{background:var(--red);color:var(--bone);}
+.complete-area{text-align:center;padding:1.5rem 0.5rem 1rem;}
+.complete-icon{font-size:52px;margin-bottom:0.7rem;line-height:1;}
+.complete-title{font-size:20px;font-weight:600;color:var(--bone);margin-bottom:0.4rem;letter-spacing:.02em;}
+.complete-sub{font-size:13px;color:var(--bone-dim);margin-bottom:1rem;line-height:1.6;}
+.complete-meta{font-size:12px;color:var(--turquoise);margin-bottom:1.1rem;font-weight:600;}
+.deco-divider{height:1px;background:linear-gradient(to right,transparent,var(--bone-faint),transparent);margin:1rem 0;}
+.deco-dots{display:flex;gap:6px;justify-content:center;margin:1rem 0;}
+.deco-dots span{width:8px;height:8px;border-radius:50%;}
+.deco-dots span:nth-child(1){background:var(--red);}
+.deco-dots span:nth-child(2){background:var(--turquoise);}
+.deco-dots span:nth-child(3){background:var(--ocre);}
+.deco-dots span:nth-child(4){background:var(--bone);}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="app">
+
+<!-- WELCOME -->
+<div class="screen active" id="s-welcome">
+  <div class="logo-wrap">
+    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" style="display:block;margin:0 auto 0.75rem;">
+      <circle cx="50" cy="50" r="46" fill="#0A0A0A" stroke="#B01E1E" stroke-width="2"/>
+      <circle cx="50" cy="50" r="40" fill="none" stroke="#E5A82E" stroke-width="1" stroke-dasharray="3,4" opacity=".6"/>
+      <line x1="18" y1="50" x2="82" y2="50" stroke="#2BB3E0" stroke-width="2"/>
+      <circle cx="30" cy="40" r="5" fill="#F0E9D8"/>
+      <circle cx="50" cy="40" r="5" fill="#F0E9D8"/>
+      <circle cx="70" cy="40" r="5" fill="#F0E9D8"/>
+      <circle cx="30" cy="62" r="5" fill="#B01E1E"/>
+      <circle cx="50" cy="62" r="5" fill="#F0E9D8"/>
+      <circle cx="70" cy="62" r="5" fill="#B01E1E"/>
+    </svg>
+    <div class="app-title">Nepohualtzintzin</div>
+    <div class="app-sub">El ábaco mesoamericano</div>
+  </div>
+  <div class="deco-dots"><span></span><span></span><span></span><span></span></div>
+  <div class="quote-box">
+    <div class="quote-text">"El nepohualtzintzin no es solo un instrumento para contar: es un puente entre la mente, las manos y la memoria de nuestros antepasados."</div>
+    <div class="quote-author">— Sabiduría mesoamericana</div>
+  </div>
+  <p style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:1.25rem;line-height:1.7;">Aprende a usar el ábaco que usaban los mayas y aztecas.<br>Ideal para 5° de primaria en adelante.</p>
+  <div class="deco-divider"></div>
+  <button class="btn-p" onclick="goMode()">Comenzar</button>
+  <button class="btn-s" onclick="showAbout()">¿Qué es el nepohualtzintzin?</button>
+</div>
+
+<!-- MODE -->
+<div class="screen" id="s-mode">
+  <div class="top-row">
+    <div style="font-size:17px;font-weight:600;">Elige tu camino</div>
+  </div>
+  <button class="glyph-btn" onclick="goStudent()">
+    <svg class="glyph-svg" width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="28" fill="#2BB3E0" opacity=".15" stroke="#2BB3E0" stroke-width="1.5"/><text x="30" y="40" font-size="32" text-anchor="middle">🎓</text></svg>
+    <div class="glyph-title">Soy estudiante</div>
+    <div class="glyph-desc">Aprende a usar el ábaco jugando y practicando</div>
+  </button>
+  <button class="glyph-btn" onclick="goTeacher()">
+    <svg class="glyph-svg" width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="28" fill="#B01E1E" opacity=".15" stroke="#B01E1E" stroke-width="1.5"/><text x="30" y="40" font-size="32" text-anchor="middle">📖</text></svg>
+    <div class="glyph-title">Soy maestro</div>
+    <div class="glyph-desc">Guía didáctica, contexto cultural y cómo armar la pulsera</div>
+  </button>
+  <button class="btn-s" onclick="screen('s-welcome')" style="margin-top:1rem;">← Volver</button>
+</div>
+
+<!-- STUDENT -->
+<div class="screen" id="s-student">
+  <div class="top-row">
+    <div style="font-size:17px;font-weight:600;">Estudiante</div>
+    <button class="btn-s" onclick="goMode()" style="width:auto;margin:0;padding:6px 12px;font-size:12px;">← Volver</button>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-explore" onclick="setStudentTab('explore')">Explorar</button>
+    <button class="nav-tab" id="tab-learn" onclick="setStudentTab('learn')">Aprender</button>
+    <button class="nav-tab" id="tab-practice" onclick="setStudentTab('practice')">Practicar</button>
+  </div>
+
+  <div id="panel-explore">
+    <div id="explore-value-box"></div>
+    <div class="nepohual-wrap"><div class="nepohual" id="abacus-explore"></div></div>
+    <div style="display:flex;gap:6px;margin-bottom:0.75rem;">
+      <button class="btn-s" onclick="resetAbacus('explore')" style="margin:0;">Limpiar</button>
+      <button class="btn-s" onclick="randomAbacus('explore')" style="margin:0;">Ejemplo aleatorio</button>
+    </div>
+    <div class="guide-sec">
+      <div class="guide-title">💡 Cómo funciona</div>
+      <div class="guide-body">Toca las cuentas para moverlas. Una cuenta cuenta cuando está <strong>pegada a la barra central</strong>.<br><br>• Cuentas de <strong>arriba</strong> valen <strong>5</strong> cada una.<br>• Cuentas de <strong>abajo</strong> valen <strong>1</strong> cada una.<br>• Cada varilla vale 10 veces más que la anterior.</div>
+    </div>
+  </div>
+
+  <div id="panel-learn" style="display:none;">
+    <div class="guide-sec"><div class="guide-title">📐 Estructura del ábaco</div><div class="guide-body">Cada varilla tiene <strong>7 cuentas</strong>:<br>• <strong>3 arriba</strong> (valen 5 cada una)<br>• <strong>4 abajo</strong> (valen 1 cada una)<br><br>Se cuentan solo las cuentas que <strong>tocan la barra central</strong>.</div></div>
+    <div class="guide-sec"><div class="guide-title">🖐️ Cómo se opera</div><div class="guide-body">• <strong>Pulgar</strong> empuja las cuentas de abajo <strong>hacia arriba</strong>.<br>• <strong>Índice</strong> empuja las cuentas de arriba <strong>hacia abajo</strong>.<br>• Se usan ambas manos o la mano dominante.</div></div>
+    <div class="guide-sec"><div class="guide-title">🔢 Ejemplo: representa el 7</div><div class="guide-body">En la primera varilla (unidades):<br>• Sube <strong>1 cuenta de arriba</strong> → vale 5<br>• Sube <strong>2 cuentas de abajo</strong> → valen 2<br>Total: <strong>5 + 2 = 7</strong></div></div>
+    <div class="guide-sec"><div class="guide-title">🔢 Ejemplo: representa el 47</div><div class="guide-body">• Varilla 1 (unidades): 5 + 2 = <strong>7</strong><br>• Varilla 2 (decenas): 4 = <strong>4</strong> decenas<br>Total: 4×10 + 7 = <strong>47</strong></div></div>
+    <div class="guide-sec"><div class="guide-title">🎯 Trucos rápidos</div><div class="guide-body">• Números 1-4: solo cuentas de abajo.<br>• Números 5-9: una de arriba + cuentas de abajo.<br>• 10: limpia la primera varilla, pon 1 en la segunda.<br>• Los números se leen <strong>de derecha a izquierda</strong>.</div></div>
+  </div>
+
+  <div id="panel-practice" style="display:none;">
+    <div class="difficulty-row">
+      <button class="diff-btn active" id="diff-1" onclick="setDifficulty(1)">Fácil (1-9)</button>
+      <button class="diff-btn" id="diff-2" onclick="setDifficulty(2)">Medio (10-99)</button>
+      <button class="diff-btn" id="diff-3" onclick="setDifficulty(3)">Difícil (100-999)</button>
+    </div>
+    <div id="practice-value-box"></div>
+    <div class="nepohual-wrap"><div class="nepohual" id="abacus-practice"></div></div>
+    <div class="check-btns">
+      <button class="btn-s" onclick="resetAbacus('practice')" style="margin:0;">Limpiar</button>
+      <button class="btn-p" onclick="newPracticeTarget()" style="margin:0;">Otro número</button>
+    </div>
+    <div class="guide-sec" style="margin-top:1rem;">
+      <div class="guide-title">📊 Tu progreso</div>
+      <div class="guide-body" id="practice-stats">Aciertos: 0 / 0</div>
+    </div>
+  </div>
+
+  <button class="btn-s" onclick="openSettings()" style="margin-top:1rem;">⚙️ Configuración del ábaco</button>
+</div>
+
+<!-- TEACHER -->
+<div class="screen" id="s-teacher">
+  <div class="top-row">
+    <div style="font-size:17px;font-weight:600;">Guía del Maestro</div>
+    <button class="btn-s" onclick="goMode()" style="width:auto;margin:0;padding:6px 12px;font-size:12px;">← Volver</button>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">📖 ¿Qué es el nepohualtzintzin?</div>
+    <div class="guide-body">Es un ábaco mesoamericano de origen <strong>olmeca</strong>, perfeccionado por <strong>mayas</strong> y <strong>aztecas</strong>. Su nombre significa aproximadamente <em>"el que cuenta con los dedos"</em>.<br><br>Tiene <strong>13 varillas</strong> y <strong>7 cuentas por varilla</strong> (3 arriba de valor 5, 4 abajo de valor 1).<br><br>Las 13 varillas se asocian con las <strong>13 articulaciones principales</strong> del cuerpo humano: tobillos, rodillas, caderas, muñecas, codos, hombros y cuello.</div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🌎 Contexto cultural</div>
+    <div class="guide-body">• La <strong>base 20</strong> viene de contar con los 20 dedos (manos + pies).<br>• Se usaba para comercio, calendario y astronomía.<br>• El glifo rojo de la pulsera es un motivo prehispánico decorativo.<br>• Sobrevive hoy en comunidades de México y Guatemala.</div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🎯 Secuencia didáctica (5 sesiones)</div>
+    <div class="guide-body">
+      <strong>Sesión 1:</strong> Contexto histórico y primer contacto (45 min). Proyecta la sección "¿Qué es?" y reparte pulseras armadas.<br><br>
+      <strong>Sesión 2:</strong> Taller de armado de la pulsera (60 min). Cada alumno arma la suya.<br><br>
+      <strong>Sesión 3:</strong> Contar del 1 al 20 (45 min). Con la pulsera física + modo Explorar.<br><br>
+      <strong>Sesión 4:</strong> Sumas simples (45 min). Mover cuentas = sumar.<br><br>
+      <strong>Sesión 5:</strong> Reto y evaluación (45 min). Modo Practicar + carrera de ábacos.
+    </div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">⚠️ Errores comunes de los alumnos</div>
+    <div class="guide-body">
+      • Contar cuentas que <strong>no tocan la barra central</strong>.<br>
+      • Confundir el valor 5 con el 1.<br>
+      • Olvidar que cada varilla vale 10 veces más que la anterior.<br>
+      • Empezar por la varilla equivocada (siempre <strong>de derecha a izquierda</strong>).<br>
+      • Mover las cuentas sin contar en voz alta al principio.
+    </div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🧵 Cómo armar la pulsera física</div>
+    <div class="guide-body">
+      <strong>Materiales por pulsera:</strong><br>
+      • Fieltro grueso negro (2 piezas ~20×15 cm)<br>
+      • Hilo de bordar blanco y rojo<br>
+      • Cordón encerado (para las 13 varillas)<br>
+      • 91 cuentas (39 claras arriba + 52 abajo, mitad rojas mitad claras)<br>
+      • Aguja, tijeras, velcro o broche
+    </div>
+  </div>
+
+  <div style="margin-top:0.5rem;">
+    <div class="step-row"><div class="step-num">1</div><div class="step-txt">Cortar las 2 piezas de fieltro con forma de glifo (usar plantilla de papel).</div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-txt">Bordar los glifos rojos en la pieza frontal con punto festón.</div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-txt">Marcar las 13 líneas verticales con separación uniforme (~1 cm).</div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-txt">Perforar 9 agujeros por varilla (7 para cuentas + 2 extremos).</div></div>
+    <div class="step-row"><div class="step-num">5</div><div class="step-txt">Enhebrar: 3 cuentas claras arriba, luego 4 abajo (2 rojas 2 claras alternadas).</div></div>
+    <div class="step-row"><div class="step-num">6</div><div class="step-txt">Tensar el cordón y rematar por detrás.</div></div>
+    <div class="step-row"><div class="step-num">7</div><div class="step-txt">Coser las 2 piezas con punto festón blanco.</div></div>
+    <div class="step-row"><div class="step-num">8</div><div class="step-txt">Añadir velcro o broche trasero. ¡Listo!</div></div>
+  </div>
+
+  <div class="guide-sec" style="margin-top:1rem;">
+    <div class="guide-title">📊 Seguimiento con Supabase</div>
+    <div class="guide-body">Próximo paso: conectar la app con Supabase para:<br>• Guardar progreso de cada alumno.<br>• Registrar aciertos/errores por ejercicio.<br>• Dashboard para el docente.<br><br>Tablas sugeridas: <code>estudiantes</code>, <code>sesiones</code>, <code>pulseras</code>.</div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="screen" id="s-settings">
+  <div class="top-row">
+    <div style="font-size:17px;font-weight:600;">Configuración</div>
+    <button class="btn-s" onclick="goStudent()" style="width:auto;margin:0;padding:6px 12px;font-size:12px;">← Volver</button>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Varillas</div><div class="setting-sub">Cantidad de columnas</div></div>
+    <div class="seg" id="seg-varillas">
+      <button data-v="4" onclick="setVarillas(4)">4</button>
+      <button data-v="6" onclick="setVarillas(6)">6</button>
+      <button data-v="13" onclick="setVarillas(13)">13</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Base numérica</div><div class="setting-sub">10 = primaria, 20 = tradicional</div></div>
+    <div class="seg" id="seg-base">
+      <button data-b="10" onclick="setBase(10)">10</button>
+      <button data-b="20" onclick="setBase(20)">20</button>
+    </div>
+  </div>
+  <button class="btn-s" onclick="resetProgress()" style="margin-top:1rem;color:var(--red);border-color:var(--red);">Borrar progreso</button>
+</div>
+
+<!-- COMPLETE -->
+<div class="screen" id="s-complete">
+  <div class="complete-area">
+    <div class="complete-icon">🎉</div>
+    <div class="complete-title" id="c-title">¡Correcto!</div>
+    <div class="complete-sub" id="c-msg"></div>
+    <div class="complete-meta" id="c-meta"></div>
+    <button class="btn-p" onclick="newPracticeTarget()">Siguiente número</button>
+    <button class="btn-s" onclick="goStudent()">Volver a practicar</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const STATE={varillas:4,base:10,abacus:{explore:null,practice:null},practice:{target:0,difficulty:1,correct:0,total:0},studentTab:'explore'};
+(function loadSettings(){
+  try{
+    const s=JSON.parse(localStorage.getItem('nepo_settings')||'{}');
+    if(s.varillas)STATE.varillas=s.varillas;
+    if(s.base)STATE.base=s.base;
+    const p=JSON.parse(localStorage.getItem('nepo_practice')||'{}');
+    if(p.correct!==undefined)STATE.practice.correct=p.correct;
+    if(p.total!==undefined)STATE.practice.total=p.total;
+    if(p.difficulty)STATE.practice.difficulty=p.d
