@@ -130,3 +130,320 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button class="btn-s" onclick="showAbout()">¿Qué es el nepohualtzintzin?</button>
 </div>
 <!-- FIN PEDAZO 1 -->
+  
+<div class="screen" id="s-mode">
+  <div class="top-row">
+    <div style="font-size:17px;font-weight:600;">Elige tu camino</div>
+  </div>
+  <button class="glyph-btn" onclick="goStudent()">
+    <svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="28" fill="#2BB3E0" opacity=".15" stroke="#2BB3E0" stroke-width="1.5"/><text x="30" y="40" font-size="32" text-anchor="middle">🎓</text></svg>
+    <div class="glyph-title">Soy estudiante</div>
+    <div class="glyph-desc">Aprende a usar el ábaco jugando y practicando</div>
+  </button>
+  <button class="glyph-btn" onclick="goTeacher()">
+    <svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="28" fill="#B01E1E" opacity=".15" stroke="#B01E1E" stroke-width="1.5"/><text x="30" y="40" font-size="32" text-anchor="middle">📖</text></svg>
+    <div class="glyph-title">Soy maestro</div>
+    <div class="glyph-desc">Guía didáctica, contexto cultural y cómo armar la pulsera</div>
+  </button>
+  <button class="btn-s" onclick="screen('s-welcome')" style="margin-top:1rem;">← Volver</button>
+</div>
+
+<div class="screen" id="s-student">
+  <div class="top-row">
+    <div style="font-size:17px;font-weight:600;">Estudiante</div>
+    <button class="btn-s" onclick="goMode()" style="width:auto;margin:0;padding:6px 12px;font-size:12px;">← Volver</button>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-explore" onclick="setStudentTab('explore')">Explorar</button>
+    <button class="nav-tab" id="tab-learn" onclick="setStudentTab('learn')">Aprender</button>
+    <button class="nav-tab" id="tab-practice" onclick="setStudentTab('practice')">Practicar</button>
+  </div>
+
+  <div id="panel-explore">
+    <div id="explore-value-box"></div>
+    <div class="nepohual-wrap"><div class="nepohual" id="abacus-explore"></div></div>
+    <div style="display:flex;gap:6px;margin-bottom:0.75rem;">
+      <button class="btn-s" onclick="resetAbacus('explore')" style="margin:0;">Limpiar</button>
+      <button class="btn-s" onclick="randomAbacus('explore')" style="margin:0;">Ejemplo aleatorio</button>
+    </div>
+    <div class="guide-sec">
+      <div class="guide-title">💡 Cómo funciona</div>
+      <div class="guide-body">Toca las cuentas para moverlas. Una cuenta cuenta cuando está <strong>pegada a la barra central</strong>.<br><br>• Cuentas de <strong>arriba</strong> valen <strong>5</strong> cada una.<br>• Cuentas de <strong>abajo</strong> valen <strong>1</strong> cada una.<br>• Cada varilla vale 10 veces más que la anterior.</div>
+    </div>
+  </div>
+
+  <div id="panel-learn" style="display:none;">
+    <div class="guide-sec"><div class="guide-title">📐 Estructura del ábaco</div><div class="guide-body">Cada varilla tiene <strong>7 cuentas</strong>:<br>• <strong>3 arriba</strong> (valen 5 cada una)<br>• <strong>4 abajo</strong> (valen 1 cada una)<br><br>Se cuentan solo las cuentas que <strong>tocan la barra central</strong>.</div></div>
+    <div class="guide-sec"><div class="guide-title">🖐️ Cómo se opera</div><div class="guide-body">• <strong>Pulgar</strong> empuja las cuentas de abajo <strong>hacia arriba</strong>.<br>• <strong>Índice</strong> empuja las cuentas de arriba <strong>hacia abajo</strong>.<br>• Se usan ambas manos o la mano dominante.</div></div>
+    <div class="guide-sec"><div class="guide-title">🔢 Ejemplo: representa el 7</div><div class="guide-body">En la primera varilla (unidades):<br>• Sube <strong>1 cuenta de arriba</strong> → vale 5<br>• Sube <strong>2 cuentas de abajo</strong> → valen 2<br>Total: <strong>5 + 2 = 7</strong></div></div>
+    <div class="guide-sec"><div class="guide-title">🔢 Ejemplo: representa el 47</div><div class="guide-body">• Varilla 1 (unidades): 5 + 2 = <strong>7</strong><br>• Varilla 2 (decenas): 4 = <strong>4</strong> decenas<br>Total: 4×10 + 7 = <strong>47</strong></div></div>
+    <div class="guide-sec"><div class="guide-title">🎯 Trucos rápidos</div><div class="guide-body">• Números 1-4: solo cuentas de abajo.<br>• Números 5-9: una de arriba + cuentas de abajo.<br>• 10: limpia la primera varilla, pon 1 en la segunda.<br>• Los números se leen <strong>de derecha a izquierda</strong>.</div></div>
+  </div>
+
+  <div id="panel-practice" style="display:none;">
+    <div class="difficulty-row">
+      <button class="diff-btn active" id="diff-1" onclick="setDifficulty(1)">Fácil (1-9)</button>
+      <button class="diff-btn" id="diff-2" onclick="setDifficulty(2)">Medio (10-99)</button>
+      <button class="diff-btn" id="diff-3" onclick="setDifficulty(3)">Difícil (100-999)</button>
+    </div>
+    <div id="practice-value-box"></div>
+    <div class="nepohual-wrap"><div class="nepohual" id="abacus-practice"></div></div>
+    <div class="check-btns">
+      <button class="btn-s" onclick="resetAbacus('practice')" style="margin:0;">Limpiar</button>
+      <button class="btn-p" onclick="newPracticeTarget()" style="margin:0;">Otro número</button>
+    </div>
+    <div class="guide-sec" style="margin-top:1rem;">
+      <div class="guide-title">📊 Tu progreso</div>
+      <div class="guide-body" id="practice-stats">Aciertos: 0 / 0</div>
+    </div>
+  </div>
+
+  <button class="btn-s" onclick="openSettings()" style="margin-top:1rem;">⚙️ Configuración del ábaco</button>
+</div>
+
+<div class="screen" id="s-teacher">
+  <div class="top-row">
+    <div style="font-size:17px;font-weight:600;">Guía del Maestro</div>
+    <button class="btn-s" onclick="goMode()" style="width:auto;margin:0;padding:6px 12px;font-size:12px;">← Volver</button>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">📖 ¿Qué es el nepohualtzintzin?</div>
+    <div class="guide-body">Es un ábaco mesoamericano de origen <strong>olmeca</strong>, perfeccionado por <strong>mayas</strong> y <strong>aztecas</strong>. Su nombre significa aproximadamente <em>"el que cuenta con los dedos"</em>.<br><br>Tiene <strong>13 varillas</strong> y <strong>7 cuentas por varilla</strong> (3 arriba de valor 5, 4 abajo de valor 1).<br><br>Las 13 varillas se asocian con las <strong>13 articulaciones principales</strong> del cuerpo humano: tobillos, rodillas, caderas, muñecas, codos, hombros y cuello.</div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🌎 Contexto cultural</div>
+    <div class="guide-body">• La <strong>base 20</strong> viene de contar con los 20 dedos (manos + pies).<br>• Se usaba para comercio, calendario y astronomía.<br>• El glifo rojo de la pulsera es un motivo prehispánico decorativo.<br>• Sobrevive hoy en comunidades de México y Guatemala.</div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🎯 Secuencia didáctica (5 sesiones)</div>
+    <div class="guide-body">
+      <strong>Sesión 1:</strong> Contexto histórico y primer contacto (45 min). Proyecta la sección "¿Qué es?" y reparte pulseras armadas.<br><br>
+      <strong>Sesión 2:</strong> Taller de armado de la pulsera (60 min). Cada alumno arma la suya.<br><br>
+      <strong>Sesión 3:</strong> Contar del 1 al 20 (45 min). Con la pulsera física + modo Explorar.<br><br>
+      <strong>Sesión 4:</strong> Sumas simples (45 min). Mover cuentas = sumar.<br><br>
+      <strong>Sesión 5:</strong> Reto y evaluación (45 min). Modo Practicar + carrera de ábacos.
+    </div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">⚠️ Errores comunes de los alumnos</div>
+    <div class="guide-body">
+      • Contar cuentas que <strong>no tocan la barra central</strong>.<br>
+      • Confundir el valor 5 con el 1.<br>
+      • Olvidar que cada varilla vale 10 veces más que la anterior.<br>
+      • Empezar por la varilla equivocada (siempre <strong>de derecha a izquierda</strong>).<br>
+      • Mover las cuentas sin contar en voz alta al principio.
+    </div>
+  </div>
+
+  <div class="guide-sec">
+    <div class="guide-title">🧵 Cómo armar la pulsera física</div>
+    <div class="guide-body">
+      <strong>Materiales por pulsera:</strong><br>
+      • Fieltro grueso negro (2 piezas ~20×15 cm)<br>
+      • Hilo de bordar blanco y rojo<br>
+      • Cordón encerado (para las 13 varillas)<br>
+      • 91 cuentas (39 claras arriba + 52 abajo, mitad rojas mitad claras)<br>
+      • Aguja, tijeras, velcro o broche
+    </div>
+  </div>
+
+  <div style="margin-top:0.5rem;">
+    <div class="step-row"><div class="step-num">1</div><div class="step-txt">Cortar las 2 piezas de fieltro con forma de glifo (usar plantilla de papel).</div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-txt">Bordar los glifos rojos en la pieza frontal con punto festón.</div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-txt">Marcar las 13 líneas verticales con separación uniforme (~1 cm).</div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-txt">Perforar 9 agujeros por varilla (7 para cuentas + 2 extremos).</div></div>
+    <div class="step-row"><div class="step-num">5</div><div class="step-txt">Enhebrar: 3 cuentas claras arriba, luego 4 abajo (2 rojas 2 claras alternadas).</div></div>
+    <div class="step-row"><div class="step-num">6</div><div class="step-txt">Tensar el cordón y rematar por detrás.</div></div>
+    <div class="step-row"><div class="step-num">7</div><div class="step-txt">Coser las 2 piezas con punto festón blanco.</div></div>
+    <div class="step-row"><div class="step-num">8</div><div class="step-txt">Añadir velcro o broche trasero. ¡Listo!</div></div>
+  </div>
+
+  <div class="guide-sec" style="margin-top:1rem;">
+    <div class="guide-title">📊 Seguimiento con Supabase</div>
+    <div class="guide-body">Próximo paso: conectar la app con Supabase para:<br>• Guardar progreso de cada alumno.<br>• Registrar aciertos/errores por ejercicio.<br>• Dashboard para el docente.<br><br>Tablas sugeridas: <code>estudiantes</code>, <code>sesiones</code>, <code>pulseras</code>.</div>
+  </div>
+</div>
+
+<div class="screen" id="s-settings">
+  <div class="top-row">
+    <div style="font-size:17px;font-weight:600;">Configuración</div>
+    <button class="btn-s" onclick="goStudent()" style="width:auto;margin:0;padding:6px 12px;font-size:12px;">← Volver</button>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Varillas</div><div class="setting-sub">Cantidad de columnas</div></div>
+    <div class="seg" id="seg-varillas">
+      <button data-v="4" onclick="setVarillas(4)">4</button>
+      <button data-v="6" onclick="setVarillas(6)">6</button>
+      <button data-v="13" onclick="setVarillas(13)">13</button>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div><div class="setting-label">Base numérica</div><div class="setting-sub">10 = primaria, 20 = tradicional</div></div>
+    <div class="seg" id="seg-base">
+      <button data-b="10" onclick="setBase(10)">10</button>
+      <button data-b="20" onclick="setBase(20)">20</button>
+    </div>
+  </div>
+  <button class="btn-s" onclick="resetProgress()" style="margin-top:1rem;color:var(--red);border-color:var(--red);">Borrar progreso</button>
+</div>
+
+<div class="screen" id="s-complete">
+  <div class="complete-area">
+    <div class="complete-icon">🎉</div>
+    <div class="complete-title" id="c-title">¡Correcto!</div>
+    <div class="complete-sub" id="c-msg"></div>
+    <div class="complete-meta" id="c-meta"></div>
+    <button class="btn-p" onclick="newPracticeTarget()">Siguiente número</button>
+    <button class="btn-s" onclick="goStudent()">Volver a practicar</button>
+  </div>
+</div>
+
+</div>
+<!-- FIN PEDAZO 2 -->
+  
+<script>
+const STATE={varillas:4,base:10,abacus:{explore:null,practice:null},practice:{target:0,difficulty:1,correct:0,total:0},studentTab:'explore'};
+(function loadSettings(){
+  try{
+    const s=JSON.parse(localStorage.getItem('nepo_settings')||'{}');
+    if(s.varillas)STATE.varillas=s.varillas;
+    if(s.base)STATE.base=s.base;
+    const p=JSON.parse(localStorage.getItem('nepo_practice')||'{}');
+    if(p.correct!==undefined)STATE.practice.correct=p.correct;
+    if(p.total!==undefined)STATE.practice.total=p.total;
+    if(p.difficulty)STATE.practice.difficulty=p.difficulty;
+  }catch(e){}
+})();
+function saveSettings(){
+  localStorage.setItem('nepo_settings',JSON.stringify({varillas:STATE.varillas,base:STATE.base}));
+  localStorage.setItem('nepo_practice',JSON.stringify({correct:STATE.practice.correct,total:STATE.practice.total,difficulty:STATE.practice.difficulty}));
+}
+let AC=null;
+function getAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
+function playClick(){try{const ac=getAC(),t=ac.currentTime;const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='sine';o.frequency.setValueAtTime(880,t);o.frequency.exponentialRampToValueAtTime(440,t+0.05);g.gain.setValueAtTime(0.15,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.08);o.start(t);o.stop(t+0.09);}catch(e){}}
+function playChime(){try{const ac=getAC(),t=ac.currentTime;[523,659,784,1047].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+i*0.1);g.gain.linearRampToValueAtTime(0.35,t+i*0.1+0.02);g.gain.exponentialRampToValueAtTime(0.001,t+i*0.1+0.7);o.start(t+i*0.1);o.stop(t+i*0.1+0.75);});}catch(e){}}
+function createAbacus(n){const v=[];for(let i=0;i<n;i++){v.push({posicion:i,cuentasSuperiores:[false,false,false],cuentasInferiores:[false,false,false,false]});}return{varillas:v};}
+function varillaValor(v){return v.cuentasSuperiores.filter(Boolean).length*5+v.cuentasInferiores.filter(Boolean).length;}
+function abacusValor(a){let t=0;a.varillas.forEach((v,i)=>{t+=varillaValor(v)*Math.pow(STATE.base,i);});return t;}
+function resetAbacus(name){STATE.abacus[name]=createAbacus(STATE.varillas);renderAbacus(name);}
+function randomAbacus(name){const a=STATE.abacus[name];a.varillas.forEach(v=>{const ar=Math.floor(Math.random()*4),ab=Math.floor(Math.random()*5);v.cuentasSuperiores=[0,1,2].map(i=>i<ar);v.cuentasInferiores=[0,1,2,3].map(i=>i<ab);});renderAbacus(name);}
+function renderAbacus(name){
+  const c=document.getElementById('abacus-'+name),a=STATE.abacus[name];
+  if(!c||!a)return;c.innerHTML='';
+  a.varillas.forEach((v,vi)=>{
+    const col=document.createElement('div');col.className='varilla';
+    const inner=document.createElement('div');inner.className='varilla-inner';
+    v.cuentasSuperiores.forEach((act,bi)=>{
+      const sl=document.createElement('div');sl.className='bead-slot';
+      const b=document.createElement('div');b.className='bead';
+      b.style.transform=act?'translateY(14px)':'translateY(-2px)';
+      b.onclick=()=>toggleBead(name,vi,'sup',bi);
+      sl.appendChild(b);inner.appendChild(sl);
+    });
+    const bar=document.createElement('div');bar.className='bar-center';inner.appendChild(bar);
+    v.cuentasInferiores.forEach((act,bi)=>{
+      const sl=document.createElement('div');sl.className='bead-slot';
+      const b=document.createElement('div');b.className='bead'+(bi%2===1?' red':'');
+      b.style.transform=act?'translateY(-14px)':'translateY(2px)';
+      b.onclick=()=>toggleBead(name,vi,'inf',bi);
+      sl.appendChild(b);inner.appendChild(sl);
+    });
+    col.appendChild(inner);
+    const lb=document.createElement('div');lb.className='varilla-label';
+    const p=a.varillas.length-1-vi;
+    lb.textContent=p===0?'U':(STATE.base===10?'10^'+p:STATE.base+'^'+p);
+    col.appendChild(lb);c.appendChild(col);
+  });
+  updateValueDisplay(name);
+}
+function toggleBead(name,vi,type,bi){
+  const v=STATE.abacus[name].varillas[vi];
+  if(type==='sup')v.cuentasSuperiores[bi]=!v.cuentasSuperiores[bi];
+  else v.cuentasInferiores[bi]=!v.cuentasInferiores[bi];
+  playClick();renderAbacus(name);
+  if(name==='practice')checkPractice();
+}
+function updateValueDisplay(name){
+  const box=document.getElementById(name+'-value-box');if(!box)return;
+  const val=abacusValor(STATE.abacus[name]);
+  if(name==='explore'){box.innerHTML=`<div class="value-display"><div class="value-label">Valor actual</div><div class="value-number">${val}</div></div>`;}
+  else{box.innerHTML=`<div class="value-display"><div class="value-label">Representa el número</div><div class="value-target"><strong>${STATE.practice.target}</strong></div><div class="value-number" style="font-size:24px;margin-top:8px;">Actual: ${val}</div></div>`;}
+}
+function newPracticeTarget(){
+  const d=STATE.practice.difficulty;let mn,mx;
+  if(d===1){mn=1;mx=9;}else if(d===2){mn=10;mx=99;}else{mn=100;mx=999;}
+  STATE.practice.target=mn+Math.floor(Math.random()*(mx-mn+1));
+  STATE.abacus.practice=createAbacus(STATE.varillas);
+  renderAbacus('practice');updateStats();
+  screen('s-student');setStudentTab('practice');
+}
+function checkPractice(){
+  const act=abacusValor(STATE.abacus.practice);
+  if(act===STATE.practice.target){
+    STATE.practice.correct++;STATE.practice.total++;saveSettings();playChime();
+    document.getElementById('c-title').textContent='¡Correcto! 🎉';
+    document.getElementById('c-msg').textContent=`Representaste el número ${STATE.practice.target} correctamente.`;
+    document.getElementById('c-meta').textContent=`Aciertos: ${STATE.practice.correct} / ${STATE.practice.total}`;
+    setTimeout(()=>screen('s-complete'),300);
+  }
+}
+function setDifficulty(d){
+  STATE.practice.difficulty=d;saveSettings();
+  ['diff-1','diff-2','diff-3'].forEach((id,i)=>{document.getElementById(id).className='diff-btn'+(i+1===d?' active':'');});
+  newPracticeTarget();
+}
+function updateStats(){
+  const el=document.getElementById('practice-stats');
+  if(el){const pct=STATE.practice.total>0?Math.round(100*STATE.practice.correct/STATE.practice.total):0;el.textContent=`Aciertos: ${STATE.practice.correct} / ${STATE.practice.total} (${pct}%)`;}
+}
+function screen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function goMode(){screen('s-mode');}
+function goStudent(){
+  screen('s-student');
+  if(!STATE.abacus.explore)STATE.abacus.explore=createAbacus(STATE.varillas);
+  if(!STATE.abacus.practice)STATE.abacus.practice=createAbacus(STATE.varillas);
+  if(!STATE.practice.target)newPracticeTarget();
+  renderAbacus('explore');renderAbacus('practice');
+  setStudentTab(STATE.studentTab);updateStats();
+}
+function goTeacher(){screen('s-teacher');}
+function showAbout(){showToast('Ábaco mesoamericano de origen olmeca');setTimeout(goMode,800);}
+function setStudentTab(tab){
+  STATE.studentTab=tab;
+  ['explore','learn','practice'].forEach(t=>{
+    document.getElementById('tab-'+t).className='nav-tab'+(t===tab?' active':'');
+    document.getElementById('panel-'+t).style.display=(t===tab?'block':'none');
+  });
+}
+function openSettings(){
+  screen('s-settings');
+  document.querySelectorAll('#seg-varillas button').forEach(b=>{b.className=(+b.dataset.v===STATE.varillas)?'on':'';});
+  document.querySelectorAll('#seg-base button').forEach(b=>{b.className=(+b.dataset.b===STATE.base)?'on':'';});
+}
+function setVarillas(v){
+  STATE.varillas=v;saveSettings();
+  document.querySelectorAll('#seg-varillas button').forEach(b=>{b.className=(+b.dataset.v===v)?'on':'';});
+  STATE.abacus.explore=createAbacus(v);STATE.abacus.practice=createAbacus(v);
+  showToast('Varillas: '+v);
+}
+function setBase(b){
+  STATE.base=b;saveSettings();
+  document.querySelectorAll('#seg-base button').forEach(x=>{x.className=(+x.dataset.b===b)?'on':'';});
+  showToast('Base: '+b);
+}
+function resetProgress(){
+  STATE.practice.correct=0;STATE.practice.total=0;STATE.practice.difficulty=1;
+  saveSettings();updateStats();showToast('Progreso borrado');
+}
+STATE.abacus.explore=createAbacus(STATE.varillas);
+STATE.abacus.practice=createAbacus(STATE.varillas);
+STATE.practice.target=0;
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+</script>
+</body>
+</html>
